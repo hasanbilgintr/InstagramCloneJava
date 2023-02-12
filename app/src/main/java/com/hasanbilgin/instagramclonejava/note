@@ -1,0 +1,129 @@
+1-ilk önce firebase.goolge.com a girilir
+2-sağ üstte giriş yoksa kayıt olunması gerekir
+3-go to console tıklanır
+4-get started tıkla
+5-oluştuurlan projede olabilir yada Add project diyerek başka proje oluşturalım
+6-proje name girilir ardından continue tıklanır
+7-google analiz enable olsun ileride kulllanıcaz ücretsiz zaten continue tıklanır
+8-google analiz için create a new account diye yeni bir hesap yada default account for firebase denedebilir biz default seçtik
+9-tekrar çıkan contınue tıklanır
+10-açılan ekranda sol tarafta gezinebilirsiniz ama aynı yere gelmek için solda project overview tıklanır
+11-ordan anroid simgesi hemen tıklanır
+12-android package namede proje packed ismi girilir (mesela com.hasanbilgin.instagramclonejava)(bu paket ismi artıkın markette bu packed isminden oluşturulamz bu önemli)
+13-diğerleri opsiyonel girilmeyebilir .register app tıklanır
+14-packet ismi önemli bunla beraber dosya oluştuurlcak bu dosyayı alıp projeye eklememiz gerekicek
+15-öncelikle dowlond google-services.json dowlond ediyoruz tıklayarak (kesinlikle isim değiştirmeyiniz önemli!!!)
+16-indirilen dosya projeye gelip android tipinde değil project tipine geçmemiz isteniyor sonra geçince app klasörünün için direk atılabilir.
+17-sonra next denir tıklanır
+18-build project kısmına
+-----------------------------
+buildscript {
+  repositories {
+    // Make sure that you have the following two repositories
+    google()  // Google's Maven repository
+    mavenCentral()  // Maven Central repository
+  }
+  dependencies {
+    // Add the dependency for the Google services Gradle plugin
+    classpath 'com.google.gms:google-services:4.3.13'
+  }
+}
+allprojects {
+  repositories {
+    // Make sure that you have the following two repositories
+    google()  // Google's Maven repository
+    mavenCentral()  // Maven Central repository
+  }
+}
+---------------------------
+eklenmesi istenir yalnız dosya bölyedir
+-----------------------------
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+}
+-------------------------------
+en son bu hale getirilmiştir
+------------------------------
+buildscript {
+    repositories {
+        // Make sure that you have the following two repositories
+        google()  // Google's Maven repository
+        mavenCentral()  // Maven Central repository
+    }
+    dependencies {
+        // Add the dependency for the Google services Gradle plugin
+        classpath 'com.google.gms:google-services:4.3.13'
+    }
+}
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+}
+allprojects {
+    repositories {
+        // Make sure that you have the following two repositories
+        //google()  // Google's Maven repository
+        //mavenCentral()  // Maven Central repository
+    }
+}
+--------------------------------------------------
+19-ardında gradle app dosyasına dökümanda yer alıyo ama yinede
+plugins {
+  id 'com.android.application'
+  // Add the Google services Gradle plugin
+  id 'com.google.gms.google-services'
+}
+dependencies {
+  // Import the Firebase BoM
+  implementation platform('com.google.firebase:firebase-bom:31.1.1')
+  // TODO: Add the dependencies for Firebase products you want to use
+  // When using the BoM, don't specify versions in Firebase dependencies
+  implementation 'com.google.firebase:firebase-analytics'
+  // Add the dependencies for any other desired Firebase products
+  // https://firebase.google.com/docs/android/setup#available-libraries
+}
+----------------------
+eklendi
+---------------------
++ olarak
+ implementation 'com.google.firebase:firebase-auth'/*kullanıcı için  için*/
+    implementation 'com.google.firebase:firebase-storage'/*depolama (resim video için) için*/
+    implementation 'com.google.firebase:firebase-firestore'/*firebase depolama için*/
+  eklendiler
+20-next denir
+-------------------
+firebase üzerinde authentication (kullanıcı işlemleri) yapabimesi için firebase girip goto console tıkla ordan authentication tıkla get started tıkla (zaten bikere tıklanabilir alan) tanımlanması için tıkladık email/password ile tıklayıp en üsttekini aktif ettik kod geçtik
+------------------
+firabase databasesine veri eklemek için
+1-firebase sitesine gidilir yine goto console vs proje seçilir Firestore Database seçip Create database tıklanır
+2-start in test mode seçtik ve next dedik
+3-burda oluşturulcak veri tabanı nerde (lokasyon)(verilerimiz nerde tutulcak) olucağına karar veriyoruz eğer yasal bir uygulama ise nam5(United States) seç  yada markete vs koymucaksan istedğini seçebilirsin biz eur3(europe) seçtik. ve seçtikten sonra değiştirilemez ve enable diyoruz
+4-veri tabanı kullanmaya hazır hale geliyoruz
+5-Store kısmıda get started geliyorsa aynı işlemleri bundada  yapıyoruz
+6-Firestore Database seçip solda açılan sayfada Rules kısmı var tıklanır
+aşağıda olan kısmı
+---------------
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if
+          request.time < timestamp.date(2023, 2, 7);
+    }
+  }
+}
+----------------------
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      /*burda herkes okuma ve yazpsın ama kullanıcı null olmadığı sürece bu şekilde url isteği güvenli hale getirmiş oluruz*/
+      allow read, write:if request.auth!=null;
+    }
+  }
+}
+tabi daha detaylı dökümanı mevcut okumanı tavsiye ederim
+------------------------
